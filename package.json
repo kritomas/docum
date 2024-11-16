@@ -1,0 +1,25 @@
+{
+  "name": "docum",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kritomas/docum.git"
+  },
+  "author": "kritomas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kritomas/docum/issues"
+  },
+  "homepage": "https://github.com/kritomas/docum#readme",
+  "dependencies": {
+    "express": "^4.21.1",
+    "http": "^0.0.1-security",
+    "socket.io": "^4.8.1"
+  }
+}
