@@ -11,15 +11,15 @@ const io = new Server(server);
 let users = {};
 let text = "BRYNDZOVÉ HALUŠKY";
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 io.on("connection", (socket) =>
 {
 	console.log("User connected: " + socket.id);
 
-	socket.on("COMM_JOIN", (username) =>
+	socket.on("COMM_JOIN", (user) =>
 	{
-		users[socket.id] = username;
+		users[socket.id] = user;
 		socket.emit("COMM_DOCUMENT_SET", text);
 		io.emit("COMM_USERS", users);
 	});
