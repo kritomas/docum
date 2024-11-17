@@ -1,7 +1,9 @@
 const socket = io();
 const editorContainer = document.getElementById('editor-container');
 const status = document.getElementById('status');
+const connectedUsers = document.getElementById('connected-users');
 let username;
+let users = {};
 let connected = false;
 
 function createUser(username)
@@ -12,6 +14,22 @@ function createUser(username)
 		ptrY: 0
 	}
 }
+
+function updateUsers()
+{
+	let userText = "";
+	let first = true;
+	for (let k in users)
+	{
+		if (!first)
+		{
+			userText += ", "
+		}
+		first = false;
+		userText += users[k].name;
+	}
+	connectedUsers.innerText = userText;
+};
 
 socket.on("connect", () =>
 {
@@ -33,6 +51,12 @@ socket.on("COMM_DOCUMENT_SET", (incoming) =>
 	}
 })
 
+socket.on("COMM_USERS", (incoming) =>
+{
+	users = incoming;
+	updateUsers();
+});
+
 editorContainer.addEventListener('input', () =>
 {
 	if (connected)
@@ -48,7 +72,7 @@ document.getElementById("join").onclick = () =>
 		username = document.getElementById("username").value;
 		if (username)
 		{
-			socket.emit("COMM_JOIN", username);
+			socket.emit("COMM_JOIN", createUser(username));
 			connected = true;
 			status.innerText = "Connected";
 		}
