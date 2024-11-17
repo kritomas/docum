@@ -13,4 +13,9 @@ socket.on("COMM_DOCUMENT_SET", (incoming) =>
 	editorContainer.innerText = incoming;
 })
 
+editorContainer.addEventListener('input', () =>
+{
+	socket.emit('COMM_DOCUMENT_SET', editorContainer.innerText);
+});
+
 socket.emit("COMM_JOIN", "kritomas");

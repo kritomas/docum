@@ -23,6 +23,12 @@ io.on("connection", (socket) =>
 		socket.emit("COMM_DOCUMENT_SET", text);
 		io.emit("COMM_USERS", users);
 	});
+
+	socket.on("COMM_DOCUMENT_SET", (incoming) =>
+	{
+		text = incoming
+		socket.broadcast.emit("COMM_DOCUMENT_SET", text);
+	})
 });
 
 server.listen(PORT);
