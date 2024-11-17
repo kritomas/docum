@@ -16,7 +16,14 @@ function createUser(username)
 socket.on("connect", () =>
 {
 	console.log("Connected to server");
-})
+	status.innerText = "Disconnected";
+});
+socket.on("disconnect", () =>
+{
+	console.log("Disconnected from server");
+	connected = false;
+	status.innerText = "Disconnected";
+});
 
 socket.on("COMM_DOCUMENT_SET", (incoming) =>
 {
@@ -43,6 +50,7 @@ document.getElementById("join").onclick = () =>
 		{
 			socket.emit("COMM_JOIN", username);
 			connected = true;
+			status.innerText = "Connected";
 		}
 	}
 };
@@ -52,5 +60,6 @@ document.getElementById("leave").onclick = () =>
 	{
 		socket.emit("COMM_LEAVE");
 		connected = false;
+		status.innerText = "Disconnected";
 	}
 };
