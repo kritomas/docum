@@ -2,6 +2,7 @@ const socket = io();
 const editorContainer = document.getElementById('editor-container');
 const status = document.getElementById('status');
 let username;
+let connected = false;
 
 function createUser(username)
 {
@@ -19,19 +20,37 @@ socket.on("connect", () =>
 
 socket.on("COMM_DOCUMENT_SET", (incoming) =>
 {
-	editorContainer.innerText = incoming;
+	if (connected)
+	{
+		editorContainer.innerText = incoming;
+	}
 })
 
 editorContainer.addEventListener('input', () =>
 {
-	socket.emit('COMM_DOCUMENT_SET', editorContainer.innerText);
+	if (connected)
+	{
+		socket.emit('COMM_DOCUMENT_SET', editorContainer.innerText);
+	}
 });
 
-document.getElementById('join').onclick = () =>
+document.getElementById("join").onclick = () =>
 {
-	username = document.getElementById("username").value;
-	if (username)
+	if (!connected)
 	{
-		socket.emit("COMM_JOIN", username);
+		username = document.getElementById("username").value;
+		if (username)
+		{
+			socket.emit("COMM_JOIN", username);
+			connected = true;
+		}
+	}
+};
+document.getElementById("leave").onclick = () =>
+{
+	if (connected)
+	{
+		socket.emit("COMM_LEAVE");
+		connected = false;
 	}
 };

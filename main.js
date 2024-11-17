@@ -20,7 +20,14 @@ io.on("connection", (socket) =>
 	socket.on("COMM_JOIN", (user) =>
 	{
 		users[socket.id] = user;
+		console.log("User joined: " + socket.id);
 		socket.emit("COMM_DOCUMENT_SET", text);
+		io.emit("COMM_USERS", users);
+	});
+	socket.on("COMM_LEAVE", () =>
+	{
+		delete users[socket.id];
+		console.log("User left: " + socket.id);
 		io.emit("COMM_USERS", users);
 	});
 
