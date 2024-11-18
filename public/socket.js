@@ -51,6 +51,7 @@ socket.on("disconnect", () =>
 {
 	console.log("Disconnected from server");
 	connected = false;
+	editorContainer.setAttribute("contenteditable", false);
 	status.innerText = "Disconnected";
 });
 
@@ -85,6 +86,7 @@ document.getElementById("join").onclick = () =>
 		{
 			socket.emit("COMM_JOIN", createUser(username));
 			connected = true;
+			editorContainer.setAttribute("contenteditable", true);
 			status.innerText = "Connected";
 		}
 	}
@@ -95,6 +97,7 @@ document.getElementById("leave").onclick = () =>
 	{
 		socket.emit("COMM_LEAVE");
 		connected = false;
+		editorContainer.setAttribute("contenteditable", false);
 		status.innerText = "Disconnected";
 	}
 };
