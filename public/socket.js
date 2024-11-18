@@ -2,6 +2,7 @@ const socket = io();
 const editorContainer = document.getElementById('editor-container');
 const status = document.getElementById('status');
 const connectedUsers = document.getElementById('connected-users');
+const cursors = document.getElementById('cursors');
 let username;
 let users = {};
 let connected = false;
@@ -29,6 +30,16 @@ function updateUsers()
 		userText += users[k].name;
 	}
 	connectedUsers.innerText = userText;
+
+	let cursorHtml = "";
+	for (let k in users)
+	{
+		cursorHtml += "<div style=\"position: absolute; background: red; width: 5px; height: 5px; left: "
+		cursorHtml += users[k].ptrX + "px; top: "
+		cursorHtml += users[k].ptrY + "px;\">"
+		cursorHtml += "</div>"
+	}
+	cursors.innerHTML = cursorHtml;
 };
 
 socket.on("connect", () =>
@@ -87,3 +98,11 @@ document.getElementById("leave").onclick = () =>
 		status.innerText = "Disconnected";
 	}
 };
+
+editorContainer.addEventListener('mousemove', (event) =>
+{
+	if (connected)
+	{
+		socket.emit('COMM_CURSOR', { x: event.clientX, y: event.clientY });
+	}
+});

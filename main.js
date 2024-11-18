@@ -30,12 +30,24 @@ io.on("connection", (socket) =>
 		console.log("User left: " + socket.id);
 		io.emit("COMM_USERS", users);
 	});
+	socket.on("disconnect", () =>
+	{
+		delete users[socket.id];
+		console.log("User disconnected: " + socket.id);
+		io.emit("COMM_USERS", users);
+	});
 
 	socket.on("COMM_DOCUMENT_SET", (incoming) =>
 	{
 		text = incoming
 		socket.broadcast.emit("COMM_DOCUMENT_SET", text);
-	})
+	});
+	socket.on("COMM_CURSOR", (position) =>
+	{
+		users[socket.id].ptrX = position.x;
+		users[socket.id].ptrY = position.y;
+		io.emit("COMM_USERS", users);
+	});
 });
 
 server.listen(PORT);
