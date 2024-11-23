@@ -43,6 +43,17 @@ function updateUsers()
 	cursors.innerHTML = cursorHtml;
 };
 
+function squashDiff(diff)
+{
+	for (let index = 0; index < diff.length; ++index)
+	{
+		if (!diff[index].added)
+		{
+			delete diff[index].value;
+		}
+	}
+}
+
 socket.on("connect", () =>
 {
 	console.log("Connected to server");
@@ -75,9 +86,11 @@ editorContainer.addEventListener('input', () =>
 {
 	if (connected)
 	{
-		console.log(Diff.diffChars(text, editorContainer.innerText));
+		let diff = Diff.diffChars(text, editorContainer.innerText);
+		squashDiff(diff)
+		console.log(diff);
+		socket.emit('COMM_DOCUMENT_UPDATE', diff);
 		text = editorContainer.innerText;
-		socket.emit('COMM_DOCUMENT_SET', text);
 	}
 });
 

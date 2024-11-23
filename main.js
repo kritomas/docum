@@ -1,7 +1,7 @@
 import express from "express";
 import { Server } from "socket.io";
 import http from "http";
-import "diff";
+import * as Diff from "diff";
 
 const PORT = 1337;
 
@@ -13,6 +13,23 @@ let users = {};
 let text = "BRYNDZOVÉ HALUŠKY";
 
 app.use(express.static("public"));
+
+function applyDiff(diff)
+{
+	let index = 0;
+	diff.forEach(part =>
+	{
+		if (part.removed)
+		{
+			text = text.slice(0, index) + text.slice(index + part.count);
+		}
+		else if (part.added)
+		{
+			text = text.slice(0, index) + part.value + text.slice(index);
+		}
+		index += part.count;
+	});
+}
 
 io.on("connection", (socket) =>
 {
@@ -41,6 +58,11 @@ io.on("connection", (socket) =>
 	socket.on("COMM_DOCUMENT_SET", (incoming) =>
 	{
 		text = incoming
+		socket.broadcast.emit("COMM_DOCUMENT_SET", text);
+	});
+	socket.on("COMM_DOCUMENT_UPDATE", (incoming) =>
+	{
+		applyDiff(incoming);
 		socket.broadcast.emit("COMM_DOCUMENT_SET", text);
 	});
 	socket.on("COMM_CURSOR", (position) =>
