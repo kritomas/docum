@@ -6,6 +6,7 @@ const cursors = document.getElementById('cursors');
 let username;
 let users = {};
 let connected = false;
+let text = "";
 
 function createUser(username)
 {
@@ -59,7 +60,8 @@ socket.on("COMM_DOCUMENT_SET", (incoming) =>
 {
 	if (connected)
 	{
-		editorContainer.innerText = incoming;
+		text = incoming;
+		editorContainer.innerText = text;
 	}
 })
 
@@ -73,7 +75,8 @@ editorContainer.addEventListener('input', () =>
 {
 	if (connected)
 	{
-		socket.emit('COMM_DOCUMENT_SET', editorContainer.innerText);
+		text = editorContainer.innerText
+		socket.emit('COMM_DOCUMENT_SET', text);
 	}
 });
 
