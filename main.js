@@ -63,7 +63,7 @@ io.on("connection", (socket) =>
 	socket.on("COMM_DOCUMENT_UPDATE", (incoming) =>
 	{
 		applyDiff(incoming);
-		socket.broadcast.emit("COMM_DOCUMENT_SET", text);
+		socket.broadcast.emit("COMM_DOCUMENT_UPDATE", incoming);
 	});
 	socket.on("COMM_CURSOR", (position) =>
 	{

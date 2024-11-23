@@ -54,6 +54,24 @@ function squashDiff(diff)
 	}
 }
 
+function applyDiff(diff)
+{
+	let index = 0;
+	diff.forEach(part =>
+	{
+		if (part.removed)
+		{
+			text = text.slice(0, index) + text.slice(index + part.count);
+		}
+		else if (part.added)
+		{
+			text = text.slice(0, index) + part.value + text.slice(index);
+		}
+		index += part.count;
+	});
+	editorContainer.innerText = text;
+}
+
 socket.on("connect", () =>
 {
 	console.log("Connected to server");
@@ -75,6 +93,13 @@ socket.on("COMM_DOCUMENT_SET", (incoming) =>
 		editorContainer.innerText = text;
 	}
 })
+socket.on("COMM_DOCUMENT_UPDATE", (incoming) =>
+{
+	if (connected)
+	{
+		applyDiff(incoming);
+	}
+})
 
 socket.on("COMM_USERS", (incoming) =>
 {
@@ -88,7 +113,6 @@ editorContainer.addEventListener('input', () =>
 	{
 		let diff = Diff.diffChars(text, editorContainer.innerText);
 		squashDiff(diff)
-		console.log(diff);
 		socket.emit('COMM_DOCUMENT_UPDATE', diff);
 		text = editorContainer.innerText;
 	}
