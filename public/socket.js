@@ -75,7 +75,8 @@ editorContainer.addEventListener('input', () =>
 {
 	if (connected)
 	{
-		text = editorContainer.innerText
+		console.log(Diff.diffChars(text, editorContainer.innerText));
+		text = editorContainer.innerText;
 		socket.emit('COMM_DOCUMENT_SET', text);
 	}
 });

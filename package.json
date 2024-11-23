@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/kritomas/docum#readme",
   "dependencies": {
+    "diff": "^7.0.0",
     "express": "^4.21.1",
     "http": "^0.0.1-security",
     "socket.io": "^4.8.1"
