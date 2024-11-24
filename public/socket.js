@@ -9,6 +9,19 @@ let users = {};
 let connected = false;
 let text = "";
 
+function getRndInteger(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+function componentToHex(c) {
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
 function createUser(username)
 {
 	return {
@@ -16,7 +29,10 @@ function createUser(username)
 		ptrX: 0,
 		ptrY: 0,
 		selectionStart: -1,
-		selectionEnd: -1
+		selectionEnd: -1,
+		red: getRndInteger(127, 240),
+		green: getRndInteger(127, 240),
+		blue: getRndInteger(127, 240)
 	}
 }
 
@@ -38,7 +54,9 @@ function updateUsers()
 	let cursorHtml = "";
 	for (let k in users)
 	{
-		cursorHtml += "<div style=\"position: absolute; background: red; width: 5px; height: 5px; left: "
+		cursorHtml += "<div style=\"position: absolute; background: ";
+		cursorHtml += rgbToHex(users[k].red, users[k].green, users[k].blue);
+		cursorHtml += "; width: 5px; height: 5px; left: "
 		cursorHtml += users[k].ptrX + "px; top: "
 		cursorHtml += users[k].ptrY + "px;\">"
 		cursorHtml += "</div>"
@@ -61,7 +79,7 @@ function updateUsers()
 			beginSpan.innerText = beginning;
 			let highlightSpan = document.createElement("span");
 			highlightSpan.innerText = highlight;
-			highlightSpan.style["background-color"] = "yellow";
+			highlightSpan.style["background-color"] = rgbToHex(users[k].red, users[k].green, users[k].blue);
 			let endSpan = document.createElement("span");
 			endSpan.innerText = end;
 			s.appendChild(beginSpan);
