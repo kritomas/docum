@@ -12,7 +12,7 @@ const io = new Server(server);
 let users = {};
 let text = "BRYNDZOVÉ HALUŠKY";
 
-app.use(express.static("public"));
+app.use(express.static("/var/docum/public"));
 
 function applyDiff(diff)
 {
