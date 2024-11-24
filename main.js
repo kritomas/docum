@@ -71,6 +71,12 @@ io.on("connection", (socket) =>
 		users[socket.id].ptrY = position.y;
 		io.emit("COMM_USERS", users);
 	});
+	socket.on("COMM_SELECTION", (selection) =>
+	{
+		users[socket.id].selectionStart = selection.start;
+		users[socket.id].selectionEnd = selection.end;
+		io.emit("COMM_USERS", users);
+	});
 });
 
 server.listen(PORT);

@@ -13,7 +13,9 @@ function createUser(username)
 	return {
 		name: username,
 		ptrX: 0,
-		ptrY: 0
+		ptrY: 0,
+		selectionStart: -1,
+		selectionEnd: -1
 	}
 }
 
@@ -147,6 +149,22 @@ editorContainer.addEventListener('mousemove', (event) =>
 {
 	if (connected)
 	{
-		socket.emit('COMM_CURSOR', { x: event.clientX, y: event.clientY });
+		socket.emit("COMM_CURSOR", { x: event.clientX, y: event.clientY });
 	}
 });
+
+document.onselectionchange = () =>
+{
+	selection = document.getSelection();
+	if (connected)
+	{
+		if (selection.focusNode.parentElement == editorContainer && selection.anchorNode.parentElement == editorContainer && selection.type == "Range")
+		{
+			socket.emit("COMM_SELECTION", {start: Math.min(selection.anchorOffset, selection.focusOffset), end: Math.max(selection.anchorOffset, selection.focusOffset)});
+		}
+		else
+		{
+			socket.emit("COMM_SELECTION", {start: -1, end: -1});
+		}
+	}
+};
