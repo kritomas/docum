@@ -8,6 +8,7 @@ let username;
 let users = {};
 let connected = false;
 let text = "";
+let domUpdateTicker = -1;
 
 function getRndInteger(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) ) + min;
@@ -172,6 +173,7 @@ editorContainer.addEventListener('input', () =>
 		squashDiff(diff)
 		socket.emit('COMM_DOCUMENT_UPDATE', diff);
 		text = editorContainer.innerText;
+		domUpdateTicker = 2;
 	}
 });
 
@@ -210,7 +212,7 @@ editorContainer.addEventListener('mousemove', (event) =>
 
 document.onselectionchange = () =>
 {
-	selection = document.getSelection();
+	selection = window.getSelection();
 	if (connected)
 	{
 		if (selection.focusNode.parentElement == editorContainer && selection.anchorNode.parentElement == editorContainer && selection.type == "Range")
@@ -223,3 +225,13 @@ document.onselectionchange = () =>
 		}
 	}
 };
+
+const domUpdater = setInterval(() =>
+{
+	--domUpdateTicker;
+	if (domUpdateTicker === 0)
+	{
+		text = editorContainer.innerText;
+		editorContainer.innerText = text; // Force DOM update.
+	}
+}, 1000)
