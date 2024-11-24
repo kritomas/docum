@@ -1,0 +1,9 @@
+[Unit]
+Description=Docum Service
+
+[Service]
+Type=simple
+ExecStart=/var/docum/start-server.sh
+
+[Install]
+WantedBy=multi-user.target
