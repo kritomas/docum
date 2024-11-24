@@ -38,18 +38,22 @@ function createUser(username)
 
 function updateUsers()
 {
-	let userText = "";
+	connectedUsers.innerHTML = "";
 	let first = true;
 	for (let k in users)
 	{
 		if (!first)
 		{
-			userText += ", "
+			let comma = document.createElement("span");
+			comma.innerText = ", ";
+			connectedUsers.appendChild(comma);
 		}
 		first = false;
-		userText += users[k].name;
+		let userText = document.createElement("span");
+		userText.innerText = users[k].name;
+		userText.style["background-color"] = rgbToHex(users[k].red, users[k].green, users[k].blue);
+		connectedUsers.appendChild(userText);
 	}
-	connectedUsers.innerText = userText;
 
 	let cursorHtml = "";
 	for (let k in users)
