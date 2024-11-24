@@ -1,8 +1,9 @@
 const socket = io();
-const editorContainer = document.getElementById('editor-container');
-const status = document.getElementById('status');
-const connectedUsers = document.getElementById('connected-users');
-const cursors = document.getElementById('cursors');
+const editorContainer = document.getElementById("editor-container");
+const status = document.getElementById("status");
+const connectedUsers = document.getElementById("connected-users");
+const cursors = document.getElementById("cursors");
+const selections = document.getElementById("selections");
 let username;
 let users = {};
 let connected = false;
@@ -43,6 +44,38 @@ function updateUsers()
 		cursorHtml += "</div>"
 	}
 	cursors.innerHTML = cursorHtml;
+
+	selections.innerHTML = "";
+	for (let k in users)
+	{
+		if (users[k].selectionStart >= 0 && users[k].selectionEnd >= 0)
+		{
+			let s = document.createElement("div");
+			s.className = "editor";
+			s.style.position = "absolute";
+			let textToHighlight = editorContainer.innerText;
+			let beginning = textToHighlight.substring(0, users[k].selectionStart);
+			let highlight = textToHighlight.substring(users[k].selectionStart, users[k].selectionEnd);
+			let end = textToHighlight.substring(users[k].selectionEnd);
+			let beginSpan = document.createElement("span");
+			beginSpan.innerText = beginning;
+			let highlightSpan = document.createElement("span");
+			highlightSpan.innerText = highlight;
+			highlightSpan.style["background-color"] = "yellow";
+			let endSpan = document.createElement("span");
+			endSpan.innerText = end;
+			s.appendChild(beginSpan);
+			s.appendChild(highlightSpan);
+			s.appendChild(endSpan);
+
+			s.offsetTop = editorContainer.offsetTop;
+			s.offsetLeft = editorContainer.offsetLeft;
+			s.offsetWidth = editorContainer.offsetWidth;
+			s.offsetHeight = editorContainer.offsetHeight;
+
+			selections.appendChild(s);
+		}
+	}
 };
 
 function squashDiff(diff)
